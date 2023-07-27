@@ -1,9 +1,5 @@
-  /*  'TOTAL $ 1,500.00\n' + */
 
-
-
-
- /*  
+ /* Codigo original con modificacion del euro 
   const Tesseract = require('tesseract.js');
 
 // Ruta de la imagen que deseas procesar
@@ -43,7 +39,7 @@ Tesseract.recognize(
 
 
 
-/*
+/*Codigo Original Usado actualmente
 const Tesseract = require('tesseract.js');
 
 // Ruta de la imagen que deseas procesar

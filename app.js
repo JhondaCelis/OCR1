@@ -1,7 +1,9 @@
-/*const T = require ("tesseract.js")
+// // Otra forma de usar tesseract.js
+// const T = require ("tesseract.js")
 
-T.recognize('./Texto2.jpg', 'spa', {logger: e => console.log(e) })
-.then(out => console.log(out))*/
+// T.recognize('./Texto5.png', 'spa', {logger: e => console.log(e) })
+// .then(out => console.log(out))
+
 
 
 
@@ -11,29 +13,33 @@ T.recognize('./Texto2.jpg', 'spa', {logger: e => console.log(e) })
 const Tesseract = require('tesseract.js');
 
 // Ruta de la imagen que deseas procesar
-const imagePath = './Texto5.png';
+const imagePath = './Texto2.jpg';
 
 // Realiza el OCR en la imagen
 Tesseract.recognize(
   imagePath,           // Ruta de la imagen
-  'eng',               // Idioma de reconocimiento (en este caso, inglés)
+  'spa+eng',               // Idioma de reconocimiento (en este caso, español)
   {
     logger: info => console.log(info.progress) // Mostrar el progreso del OCR en la consola
   }
 ).then(({ data: { text } }) => {
-  // Aplicar expresión regular para extraer el total y su valor
-  const totalPattern = /TOTAL\D*([\d.,\s]+)/i; // Expresión regular para buscar "TOTAL" seguido de cualquier combinación de dígitos, puntos, comas y espacios
-  const match = text.match(totalPattern);
+  console.log('Texto extraído:', text);
 
-  if (match) {
-    const totalValue = match[1].replace(/[^\d.-]/g, ''); // Eliminar cualquier caracter que no sea dígito, punto o signo de menos
-    const resultJSON = {
-      total: parseFloat(totalValue)
-    };
-    console.log('Resultado en JSON:', resultJSON);
-  } else {
-    console.log('Total no encontrado en el texto.');
+  // Buscar las palabras clave y extraer los valores asociados
+  const keywords = ['Subtotal', 'IVA', 'Fecha', 'Total', 'Fecha vencimiento', 'Carretera' ];
+  const extractedData = {};
+
+  for (const keyword of keywords) {
+    const regex = new RegExp(`${keyword}\\s+([\\d,.]+)`, 'i');
+    const match = text.match(regex);
+    if (match) {
+      extractedData[keyword] = match[1].trim(); // No se realiza el reemplazo de comas por puntos
+    } else {
+      extractedData[keyword] = 'No encontrado';
+    }
   }
+  
+  console.log('Datos extraídos:', extractedData);
 }).catch(error => {
   console.error('Error:', error);
 });
